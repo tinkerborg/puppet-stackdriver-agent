@@ -33,13 +33,13 @@ class stackdriver::plugin::puppet_agent::config(
   }
 
   # Ensure the scripts directory exists.
-  file { '/opt/stackdriver/collectd/etc/scripts/':
-    ensure => 'directory',
-    path   => '/opt/stackdriver/collectd/etc/scripts/',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644'
-  } 
+  #file { '/opt/stackdriver/collectd/etc/scripts/':
+  #  ensure => 'directory',
+  #  path   => '/opt/stackdriver/collectd/etc/scripts/',
+  #  owner  => 'root',
+  #  group  => 'root',
+  #  mode   => '0644'
+  #} 
 
   # Drop in the shell script which will be invoked by the collect 'exec' plugin.
   # Referenced from hiera.

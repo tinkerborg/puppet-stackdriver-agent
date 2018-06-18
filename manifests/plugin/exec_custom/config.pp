@@ -17,5 +17,17 @@ class stackdriver::plugin::exec_custom::config(
     notify  => Service[$::stackdriver::svc],
   }
 
-}
+  
+  if ! defined(Package['python-pip']) {
+    package { 'python-pip':
+      ensure =>  installed,
+    }
+  }
 
+  ensure_packages(['jsonpath'], {
+    ensure   =>  present,
+    provider =>  'pip',
+    require  =>  [ Package['python-pip'], ],
+  })
+
+}

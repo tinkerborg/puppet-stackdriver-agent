@@ -77,6 +77,8 @@ class stackdriver::plugin::exec_custom(
 
   contain "${name}::config"
 
+  
+
   # Install package
   #ensure_resource('package', 'yajl', {
   #  'ensure'  => 'present',

@@ -5,19 +5,28 @@ LoadPlugin target_set
 LoadPlugin target_replace
 LoadPlugin write_gcm
 LoadPlugin write_log
+LoadPlugin exec
+
+
+<Plugin exec>
+<% @custom_rules.each do |custom_rule| -%>
+  <%     q = { 'plugin_name' => @plugin_name, 'plugin_instance' => @plugin_instance, 'metric_type' => @metric_type, 'type_instance' => @type_instance, 'exec_cmd' => @exec_cmd, 'interval' => @interval, 'yamlfile' => @yamlfile, 'jsonfile' => @jsonfile, 'matchpath' => @matchpath }.merge(custom_rule) -%>
+  Exec "nobody:nobody" "/opt/stackdriver/collectd/etc/scripts/exec_custom.py" <% if q['interval'] -%>"-I <%= q['interval'] %>"<% end -%> <% if q['exec_cmd'] -%>"-e `<%= q['exec_cmd'] %>`"<% end -%> <% if q['yamlfile'] -%>"-y <%= q['yamlfile'] %>"<% end -%> <% if q['jsonfile'] -%>"-j <%= q['jsonfile'] %>"<% end -%> <% if q['match'] -%>"-jsonpath <%= q['match'] %>"<% end -%> "-p <%= q['plugin_name'] %>" "-i <%= q['plugin_instance'] %>" "-t <%= q['metric_type'] %>" "-T <%= q['type_instance'] %>" 
+<% end -%>
+</Plugin>
 
 PreCacheChain "PreCache"
 
 <Chain "PreCache">
 
   <% @custom_rules.each do |custom_rule| -%>
-  <%     q = { 'rule' => @rule, 'plugin' => @plugin, 'plugin_instance' => @plugin_instance, 'type' => @type, 'type_instance' => @type_instance, 'sd_metric_type' => @sd_metric_type }.merge(custom_rule) -%>
+  <%     q = { 'plugin_name' => @plugin_name, 'plugin_instance' => @plugin_instance, 'metric_type' => @metric_type, 'type_instance' => @type_instance, 'sd_metric_type' => @sd_metric_type }.merge(custom_rule) -%>
 
-  <Rule "<%= q['rule'] %>">
+  <Rule "get_<%= q['plugin_name'] %>_<%= q['plugin_instance'] %>_<%= q['type_instance'] %>">
     <Match "regex">
-      Plugin "^<%= q['plugin'] %>$"
+      Plugin "^<%= q['plugin_name'] %>$"
       PluginInstance "^<%= q['plugin_instance'] %>$"
-      Type "^<%= q['type'] %>$" 
+      Type "^<%= q['metric_type'] %>$" 
       TypeInstance "^<%= q['type_instance'] %>$"
     </Match>
     <Target "set">

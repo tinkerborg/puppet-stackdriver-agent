@@ -1,0 +1,52 @@
+#!/usr/bin/python
+
+import argparse
+import time
+import os
+import json
+import yaml
+import jsonpath
+import commands
+import sys
+
+this_host = os.uname()[1]
+
+parser = argparse.ArgumentParser(description='Gather metrics for collectd with custom exec.')
+
+parser.add_argument('-p', '--plugin_name', help="Name of plugin", required=True)
+parser.add_argument('-i', '--plugin_instance', help="Instance Name of plugin", required=True)
+parser.add_argument('-t', '--type_name', default="gauge", help="Type of data (default: gauge)")
+parser.add_argument('-T', '--type_instance', help="Type of instance", required=True)
+parser.add_argument('-I', '--interval', default='60', type=int, help='Check interval in seconds (default: 60)')
+parser.add_argument('-j', '--json', help='Path to JSON file')
+parser.add_argument('-y', '--yaml', help='Path to YAML file')
+parser.add_argument('-P', '--jsonpath', help='Path to JSON file')
+parser.add_argument('-e', '--execute', help='Execute a command to get numeric value.')
+
+# Parse those args, Jeeves..
+args = parser.parse_args()
+
+while True:
+   time.sleep(args.interval)
+   epoch_time = int(time.time())
+
+   if args.json:
+     with open(args.json) as f:
+       indata = json.load(f)
+       match = jsonpath.jsonpath(indata, args.jsonpath)
+       outval = match[0]
+
+   if args.yaml:
+     with open(args.yaml) as f:
+       indata = yaml.load(f)
+       match = jsonpath.jsonpath(indata, args.jsonpath)
+       outval = match[0]
+
+   if args.execute:
+     execval = commands.getstatusoutput(args.execute)
+     if execval[0] is not 0:
+       print "Error: exec command '%s' returned error code: %s" % (args.e, execval[0])
+       sys.exit(execval[0])
+     outval = execval[1]
+
+   print "PUTVAL \"%s/%s-%s/%s-%s\" interval=%d %d:%s" % (this_host, args.plugin_name, args.plugin_instance, args.type_name, args.type_instance, args.interval, epoch_time, outval)

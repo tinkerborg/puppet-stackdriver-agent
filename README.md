@@ -143,18 +143,25 @@ Example:
 
 ```yaml
 stackdriver::plugin::exec_custom::custom_rules:
-  - rule:            'get_puppet_last_run_seconds'
-    plugin:          'check_puppet'
-    plugin_instance: 'get_last_run'
-    type:            'gauge'
-    type_instance:   'last_run_seconds'
-    sd_metric_type:  'custom.googleapis.com/puppet/last_run'
-  - rule:            'get_puppet_events_total'
-    plugin:          'check_puppet'
-    plugin_instance: 'get_last_run'
-    type:            'gauge'
-    type_instance:   'last_run_events_total'
-    sd_metric_type:  'custom.googleapis.com/puppet/events_total'
+  - type_instance:   'root_dir_count'
+    metric_type:     'gauge'
+    exec_cmd:        'ls -al / | wc -l'
+    interval:        '10'
+    sd_metric_type:  'custom.googleapis.com/custom_os/root_dir_count'
+  - type_instance:   'dev_dir_count'
+    metric_type:     'gauge'
+    exec_cmd:        'ls -al /dev | wc -l'
+    sd_metric_type:  'custom.googleapis.com/custom_os/dev_dir_count'
+  - type_instance:   'test_yamlval_count'
+    metric_type:     'gauge'
+    yamlfile:        '/tmp/file.yaml'
+    matchpath:       'foo.bar'
+    sd_metric_type:  'custom.googleapis.com/custom_os/test_yamlval_count'
+  - type_instance:   'test_jsonval_count'
+    metric_type:     'gauge'
+    jsonfile:        '/tmp/file.json'
+    matchpath:       'foo.bar'
+    sd_metric_type:  'custom.googleapis.com/custom_os/test_jsonval_count'
 ```
 
 ### Puppet Agent 
