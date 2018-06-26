@@ -10,8 +10,18 @@ LoadPlugin exec
 
 <Plugin exec>
 <% @custom_rules.each do |custom_rule| -%>
-  <%     q = { 'plugin_name' => @plugin_name, 'plugin_instance' => @plugin_instance, 'metric_type' => @metric_type, 'type_instance' => @type_instance, 'exec_cmd' => @exec_cmd, 'interval' => @interval, 'yamlfile' => @yamlfile, 'jsonfile' => @jsonfile, 'matchpath' => @matchpath }.merge(custom_rule) -%>
-  Exec "nobody:nobody" "/opt/stackdriver/collectd/etc/scripts/exec_custom.py" <% if q['interval'] -%>"-I <%= q['interval'] %>"<% end -%> <% if q['exec_cmd'] -%>"-e `<%= q['exec_cmd'] %>`"<% end -%> <% if q['yamlfile'] -%>"-y <%= q['yamlfile'] %>"<% end -%> <% if q['jsonfile'] -%>"-j <%= q['jsonfile'] %>"<% end -%> <% if q['match'] -%>"-jsonpath <%= q['match'] %>"<% end -%> "-p <%= q['plugin_name'] %>" "-i <%= q['plugin_instance'] %>" "-t <%= q['metric_type'] %>" "-T <%= q['type_instance'] %>" 
+  <% z = { 'plugin_name'      => @plugin_name, 
+           'plugin_instance'  => @plugin_instance, 
+           'metric_type'      => @metric_type, 
+           'type_instance'    => @type_instance, 
+           'exec_cmd'         => @exec_cmd, 
+           'interval'         => @interval, 
+           'yamlfile'         => @yamlfile, 
+           'jsonfile'         => @jsonfile, 
+           'matchpath'        => @matchpath 
+     }.merge(custom_rule) -%>
+
+  Exec "nobody:nobody" "/opt/stackdriver/collectd/etc/scripts/exec_custom.py" <% if z['interval'] -%>"-I <%= z['interval'] %>"<% end -%> <% if z['exec_cmd'] -%>"-e `<%= z['exec_cmd'] %>`"<% end -%> <% if z['yamlfile'] -%>"-y <%= z['yamlfile'] %>"<% end -%> <% if z['jsonfile'] -%>"-j <%= z['jsonfile'] %>"<% end -%> <% if z['matchpath'] -%>"-jsonpath <%= z['matchpath'] %>"<% end -%> "-p <%= z['plugin_name'] %>" "-i <%= z['plugin_instance'] %>" "-t <%= z['metric_type'] %>" "-T <%= z['type_instance'] %>" 
 <% end -%>
 </Plugin>
 
@@ -20,9 +30,14 @@ PreCacheChain "PreCache"
 <Chain "PreCache">
 
   <% @custom_rules.each do |custom_rule| -%>
-  <%     q = { 'plugin_name' => @plugin_name, 'plugin_instance' => @plugin_instance, 'metric_type' => @metric_type, 'type_instance' => @type_instance, 'sd_metric_type' => @sd_metric_type }.merge(custom_rule) -%>
+    <% q = { 'plugin_name'      => @plugin_name, 
+             'plugin_instance'  => @plugin_instance, 
+             'metric_type'      => @metric_type, 
+             'type_instance'    => @type_instance, 
+             'sd_metric_type'   => @sd_metric_type 
+    }.merge(custom_rule) -%>
 
-  <Rule "get_<%= q['plugin_name'] %>_<%= q['plugin_instance'] %>_<%= q['type_instance'] %>">
+  <Rule "get_<%= q['plugin_name'] %>_<%= q['type_instance'] %>">
     <Match "regex">
       Plugin "^<%= q['plugin_name'] %>$"
       PluginInstance "^<%= q['plugin_instance'] %>$"

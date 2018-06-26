@@ -62,8 +62,8 @@ class stackdriver::plugin::exec_custom(
 
   $config           = '/opt/stackdriver/collectd/etc/collectd.d/exec_custom.conf',
   $rule             = undef,
-  $plugin           = undef, 
-  $plugin_instance  = undef, 
+  $plugin_name      = 'custom_exec', 
+  $plugin_instance  = 'custom_exec_instance', 
   $type             = 'gauge',
   $type_instance    = undef, 
   $sd_metric_type   = undef, 
