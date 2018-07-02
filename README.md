@@ -130,7 +130,7 @@ Values enclosed in () have an undef default and are optional.
 
 ### Custom Exec
 
-This is t be used in conjunction with the `exec` plugin. 
+This is to be used in conjunction with the `exec` plugin. 
 The script that is run must output a PUTVAL in the following format:
 Example:
 ```
