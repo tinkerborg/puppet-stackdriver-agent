@@ -188,7 +188,7 @@ stackdriver::plugin::puppet_agent::custom_rules:
 
 ### Cassandra 
 
-Configures the Cassandra (Currently only supports Cassandra v2.2.x)
+Configures the Cassandra plugin (Currently only supports Cassandra v2.2.x)
 
 ```yaml
 stackdriver::plugins:
