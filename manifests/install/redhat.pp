@@ -31,12 +31,12 @@
 #
 class stackdriver::install::redhat(
 
-  $pkg    = [ 'stackdriver-agent', 'stackdriver-extractor' ],
+  $pkg    = [ 'stackdriver-agent' ],
   $ensure = 'present',
 
   $repo = {
-    'baseurl'   => 'http://repo.stackdriver.com/repo/el$releasever/$basearch/',
-    'gpgkey'    => 'https://app.stackdriver.com/RPM-GPG-KEY-stackdriver',
+    'baseurl'   => 'https://packages.cloud.google.com/yum/repos/google-cloud-monitoring-el$releasever-$basearch/',
+    'gpgkey'    => 'https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg',
     'descr'     => 'stackdriver',
     'enabled'   => 1,
     'gpgcheck'  => 1,
