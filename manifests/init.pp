@@ -115,6 +115,13 @@ class stackdriver (
       group   => 'root',
       mode    => '0755'
     }
+    file { '/etc/stackdriver/utils/sdsend6.py':
+      ensure  => 'present',
+      source  => 'puppet:///modules/stackdriver/utils/sdsend6.py',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755'
+    }
   
     if fact('os.name') == "CentOS" and
        fact('os.release.major') == "6" {
