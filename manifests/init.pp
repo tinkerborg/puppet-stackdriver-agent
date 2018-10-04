@@ -128,6 +128,10 @@ class stackdriver (
          command  => "/usr/bin/scl enable python27 'pip install google-api-python-client'",
          unless   => "/usr/bin/scl enable python27 'pip show google-api-python-client'"
        }
+       exec { 'pip install google-cloud-monitoring':
+         command  => "/usr/bin/scl enable python27 'pip install google-cloud-monitoring'",
+         unless   => "/usr/bin/scl enable python27 'pip show google-cloud-monitoring'"
+       }
     }
     if fact('os.name') == "CentOS" and
        fact('os.release.major') == "7" {
@@ -140,6 +144,10 @@ class stackdriver (
        exec { 'pip install google-api-python-client':
          command  => "pip install google-api-python-client",
          unless   => "pip show google-api-python-client"
+       }
+       exec { 'pip install google-cloud-monitoring':
+         command  => "pip install google-cloud-monitoring",
+         unless   => "pip show google-cloud-monitoring"
        }
     }
   }
