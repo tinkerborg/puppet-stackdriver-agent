@@ -102,6 +102,20 @@ class stackdriver (
   # Ensure Google's Python Packages are Installed
   # This requires >=python2.7 so CentOS 6 will need to use scl
   if $google_python_api {
+  
+    file { '/etc/stackdriver/utils/':
+      ensure => 'directory',
+      owner  => 'root',
+      group  => 'root'
+    }
+    file { '/etc/stackdriver/utils/sdsend.py':
+      ensure  => 'present',
+      source  => 'puppet:///modules/stackdriver/utils/sdsend.py',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755'
+    }
+  
     if fact('os.name') == "CentOS" and
        fact('os.release.major') == "6" {
 
