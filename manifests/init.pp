@@ -43,6 +43,7 @@ class stackdriver (
   $managerepo = true,
   $service_ensure = 'running',
   $service_enable = true,
+  $google_python_api = false,
   $gcm = false,
 
   $svc = $gcm ? {
@@ -97,6 +98,59 @@ class stackdriver (
     require        => Class[$cclass],
   }
   include $sclass
+
+  # Ensure Google's Python Packages are Installed
+  # This requires >=python2.7 so CentOS 6 will need to use scl
+  if $google_python_api {
+  
+    file { '/etc/stackdriver/utils/':
+      ensure => 'directory',
+      owner  => 'root',
+      group  => 'root'
+    }
+    file { '/etc/stackdriver/utils/sdsend.py':
+      ensure  => 'present',
+      source  => 'puppet:///modules/stackdriver/utils/sdsend.py',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755'
+    }
+  
+    if fact('os.name') == "CentOS" and
+       fact('os.release.major') == "6" {
+
+       if ! defined( Package[ 'centos-release-scl' ] ) {
+         package { [ 'centos-release-scl', 'python27' ]:
+           ensure => 'installed'
+         }
+       }
+       exec { 'pip install google-api-python-client':
+         command  => "/usr/bin/scl enable python27 'pip install google-api-python-client'",
+         unless   => "/usr/bin/scl enable python27 'pip show google-api-python-client'"
+       }
+       exec { 'pip install google-cloud-monitoring':
+         command  => "/usr/bin/scl enable python27 'pip install google-cloud-monitoring'",
+         unless   => "/usr/bin/scl enable python27 'pip show google-cloud-monitoring'"
+       }
+    }
+    if fact('os.name') == "CentOS" and
+       fact('os.release.major') == "7" {
+
+       if ! defined(Package[ 'python-pip' ]) {
+         package { [ 'python-pip' ]:
+           ensure => 'installed'
+         }
+       }
+       exec { 'pip install google-api-python-client':
+         command  => "pip install google-api-python-client",
+         unless   => "pip show google-api-python-client"
+       }
+       exec { 'pip install google-cloud-monitoring':
+         command  => "pip install google-cloud-monitoring",
+         unless   => "pip show google-cloud-monitoring"
+       }
+    }
+  }
 
   # Array of Plugins to load (optional)
   $plugins = hiera_array("${name}::plugins", [])
