@@ -1,3 +1,4 @@
+#!/bin/python
 
 from google.cloud import monitoring_v3
 
