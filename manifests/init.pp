@@ -126,11 +126,13 @@ class stackdriver (
        }
        exec { 'pip install google-api-python-client':
          command  => "/usr/bin/scl enable python27 'pip install google-api-python-client'",
-         unless   => "/usr/bin/scl enable python27 'pip show google-api-python-client'"
+         unless   => "/usr/bin/scl enable python27 'pip show google-api-python-client'",
+         path     => '/bin/:/sbin/:/usr/bin/:/usr/sbin/'
        }
        exec { 'pip install google-cloud-monitoring':
          command  => "/usr/bin/scl enable python27 'pip install google-cloud-monitoring'",
-         unless   => "/usr/bin/scl enable python27 'pip show google-cloud-monitoring'"
+         unless   => "/usr/bin/scl enable python27 'pip show google-cloud-monitoring'",
+         path     => '/bin/:/sbin/:/usr/bin/:/usr/sbin/'
        }
     }
     if fact('os.name') == "CentOS" and
@@ -143,11 +145,13 @@ class stackdriver (
        }
        exec { 'pip install google-api-python-client':
          command  => "pip install google-api-python-client",
-         unless   => "pip show google-api-python-client"
+         unless   => "pip show google-api-python-client",
+         path     => '/bin/:/sbin/:/usr/bin/:/usr/sbin/'
        }
        exec { 'pip install google-cloud-monitoring':
          command  => "pip install google-cloud-monitoring",
-         unless   => "pip show google-cloud-monitoring"
+         unless   => "pip show google-cloud-monitoring",
+         path     => '/bin/:/sbin/:/usr/bin/:/usr/sbin/'
        }
     }
   }
