@@ -13,7 +13,7 @@ for line in sys.stdin:
 parser = argparse.ArgumentParser(description='Ship custom metrics directly to StackDriver')
 client = monitoring_v3.MetricServiceClient()
 
-parser.add_argument('-p', '--project', help="Project for StackDriver Metric", required=true)
+parser.add_argument('-p', '--project', help="Project for StackDriver Metric", required=True)
 parser.add_argument('-c', '--custom', help="Example: custom.googleapis.com/example_top_level/metric1", required=True)
 
 args = parser.parse_args()
