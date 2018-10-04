@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/scl enable python27 -- python
 
 from google.cloud import monitoring_v3
 
