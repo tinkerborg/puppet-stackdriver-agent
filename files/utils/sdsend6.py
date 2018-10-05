@@ -16,13 +16,19 @@ client = monitoring_v3.MetricServiceClient()
 
 parser.add_argument('-p', '--project', help="Project for StackDriver Metric", required=True)
 parser.add_argument('-c', '--custom', help="Example: custom.googleapis.com/example_top_level/metric1", required=True)
+parser.add_argument('-t', '--restype', help="Examples: gce_instance, global", required=True)
+parser.add_argument('-z', '--zone', help="Examples: us-east1-b", required=True)
+parser.add_argument('-i', '--id', help="Instance ID", required=True)
 
 args = parser.parse_args()
 
 project_name = client.project_path(args.project)
 
 series = monitoring_v3.types.TimeSeries()
-#series.metric.type = 'custom.googleapis.com/testmetric/metric1'
+
+series.resource.labels['instance_id'] = args.id
+series.resource.labels['zone'] = args.zone
+series.resource.type = args.restype
 series.metric.type = args.custom
 
 # Get values from stdin piped value
