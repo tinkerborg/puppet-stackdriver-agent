@@ -108,20 +108,7 @@ class stackdriver (
       owner  => 'root',
       group  => 'root'
     }
-    file { '/etc/stackdriver/utils/sdsend.py':
-      ensure  => 'present',
-      source  => 'puppet:///modules/stackdriver/utils/sdsend.py',
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0755'
-    }
-    file { '/etc/stackdriver/utils/sdsend6.py':
-      ensure  => 'present',
-      source  => 'puppet:///modules/stackdriver/utils/sdsend6.py',
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0755'
-    }
+    
     file { '/etc/stackdriver/utils/sdsend.sh':
       ensure  => 'present',
       source  => 'puppet:///modules/stackdriver/utils/sdsend.sh',
